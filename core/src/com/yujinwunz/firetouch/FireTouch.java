@@ -1,6 +1,8 @@
 package com.yujinwunz.firetouch;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,14 +13,19 @@ import java.util.concurrent.Callable;
 public class FireTouch extends Game {
 	SpriteBatch batch;
 	Texture img;
-	OrthographicCamera camera = new OrthographicCamera();
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
-	
+	OrthographicCamera camera;
+	ShapeRenderer shapeRenderer;
+
 	@Override
 	public void create () {
+		Gdx.app	.setLogLevel(Application.LOG_DEBUG);
+		Gdx.app.debug("create", "Create was called");
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-		camera.setToOrtho(false, 800, 400);
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		final FireTouch me = this;
 		this.setScreen(new MainMenu(new Callable() {
 			@Override
@@ -28,6 +35,25 @@ public class FireTouch extends Game {
 			}
 		}));
 	}
+
+	@Override
+	public void resume() {
+		super.resume();
+		Gdx.app.log("resume", "Resume was called");
+	}
+
+	@Override
+	public void pause() {
+		super.resume();
+		Gdx.app.log("pause", "Pause was called");
+	}
+
+	@Override
+	public void dispose() {
+		super.resume();
+		Gdx.app.log("dispose", "Dispose was called");
+	}
+
 
 	@Override
 	public void render () {

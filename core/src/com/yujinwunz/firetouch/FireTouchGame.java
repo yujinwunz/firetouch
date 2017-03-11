@@ -56,8 +56,11 @@ public class FireTouchGame extends ScreenAdapter {
 		});
 		for (Box b: boxes) {
 			int size = 30 + b.age;
-			parent.shapeRenderer.setColor(new Color(1 - b.age / 90.f, 1 - b.age / 30.f, 0 ,1));
-			parent.shapeRenderer.rect(b.x - size/2, b.y - size/2, size, size);
+			parent.shapeRenderer.setColor(new Color(1 - b.age / 90.f, 1 - b.age / 30.f, 0 , 1f));
+			parent.shapeRenderer.rectLine(b.x - size/2, b.y - size/2, b.x + size/2, b.y - size/2, 3);
+			parent.shapeRenderer.rectLine(b.x - size/2, b.y - size/2, b.x - size/2, b.y + size/2, 3);
+			parent.shapeRenderer.rectLine(b.x + size/2, b.y - size/2, b.x + size/2, b.y + size/2, 3);
+			parent.shapeRenderer.rectLine(b.x - size/2, b.y + size/2, b.x + size/2, b.y + size/2, 3);
 
 			if (Math.abs(random.nextInt()) % 900 < 30&& random.nextInt() % 90 > b.age) {
 				newboxes.addLast(
@@ -75,7 +78,7 @@ public class FireTouchGame extends ScreenAdapter {
 
 		parent.batch.begin();
 		parent.batch.setProjectionMatrix(parent.camera.combined);
-		font.draw(parent.batch, Integer.toString(boxes.size()), 3, 20);
+		//font.draw(parent.batch, Integer.toString(boxes.size()), 3, 20);
 		parent.batch.end();
 	}
 

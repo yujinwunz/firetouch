@@ -25,14 +25,17 @@ import java.util.concurrent.Callable;
 public class MainMenu extends ScreenAdapter {
 
 	Stage stage = new Stage();
-	static BitmapFont font;
+	BitmapFont font, font_small;
+	Callable onClick;
 
-	static Skin skin;
-	static {
+	Skin skin;
+	public void loadResources() {
 		skin = new Skin();
 		TextureAtlas buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.pack.atlas"));
 		skin.addRegions(buttonAtlas);
 		font = new BitmapFont(Gdx.files.internal("fonts/prstartk-large.fnt"));
+		font_small = new BitmapFont(Gdx.files.internal("fonts/prstartk.fnt"));
+
 		for (String drawableName: new String[]{"up-button", "down-button", "checked-button"}) {
 			Drawable d = skin.getDrawable(drawableName);
 			d.setBottomHeight(20);
@@ -42,18 +45,25 @@ public class MainMenu extends ScreenAdapter {
 		}
 	}
 
-	public MainMenu(final Callable onClick) {
+	public void setStage() {
 		Table table = new Table();
 		table.setFillParent(true);
 		table.center();
 
 		// Add instructions
-		Label instructions = new Label(
-				"Tap and drag around to create relaxing fires",
-				new Label.LabelStyle(font, new Color(0.7f, 0.7f, 0, 1))
+		Label instructions1 = new Label(
+				"Tap and drag around to",
+				new Label.LabelStyle(font_small, new Color(0.7f, 0.7f, 0, 1))
 		);
 
-		table.add(instructions);
+		Label instructions2 = new Label(
+				"to create beautiful fires",
+				new Label.LabelStyle(font_small, new Color(0.7f, 0.7f, 0, 1))
+		);
+
+		table.add(instructions1);
+		table.row();
+		table.add(instructions2);
 		table.row();
 
 		TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -85,8 +95,16 @@ public class MainMenu extends ScreenAdapter {
 		stage.addActor(table);
 	}
 
+	public MainMenu(final Callable onClick) {
+		loadResources();
+		this.onClick = onClick;
+		setStage();
+	}
+
 	@Override
 	public void show() {
+		loadResources();
+		setStage();
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -96,9 +114,25 @@ public class MainMenu extends ScreenAdapter {
 	}
 
 	@Override
+	public void resume() {
+		loadResources();
+		setStage();
+	}
+
+	int frames = 0;
+	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		frames ++;
+		Gdx.gl.glClearColor(0.1f, 0.01f, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.draw();
+	}
+
+	@Override
+	public void dispose() {
+		font_small.dispose();
+		font.dispose();
+		stage.dispose();
+		skin.dispose();
 	}
 }
